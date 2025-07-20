@@ -7,7 +7,6 @@ import com.henriq.libraryapi.model.BookGender;
 import com.henriq.libraryapi.repository.AuthorRepository;
 import com.henriq.libraryapi.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +39,7 @@ public class TransactionService {
         var author = authorRepository
                 .findById(UUID.fromString("73a65fd3-31c3-4728-92af-19d9fbc29dec"))
                 .orElse(null);
-        author.setDateOfBirth(LocalDate.of(2000, 2, 10));
+        author.setDateOfBirth(LocalDate.of(2010, 4, 8));
     }
 
     /**
