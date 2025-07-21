@@ -18,10 +18,14 @@ public class AuthorService {
     }
 
     public Author save(Author author){
-        return repository.save(author);
+        return this.repository.save(author);
     }
 
     public Optional<Author> getById(UUID id){
-        return repository.findById(id);
+        return this.repository.findById(id);
+    }
+
+    public void delete(Author author){
+        this.repository.delete(author);
     }
 }
