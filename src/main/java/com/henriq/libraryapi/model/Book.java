@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table(name = "book")
+@Table(name = "livro")
 @Data
 @ToString(exclude = "author")
 public class Book {
@@ -18,27 +18,27 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "title", length = 150, nullable = false)
+    @Column(name = "titulo", length = 150, nullable = false)
     private String title;
 
     @Column(name = "isbn", length = 20, nullable = false)
     private String isbn;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "gender", length = 30, nullable = false)
+    @Column(name = "genero", length = 30, nullable = false)
     private BookGender gender;
 
-    @Column(name = "publication_date", nullable = false)
+    @Column(name = "data_publicacao", nullable = false)
     private LocalDate publicationDate;
 
-    @Column(name = "price", precision = 18, scale = 2)
+    @Column(name = "preco", precision = 18, scale = 2)
     private BigDecimal price;
 
     @ManyToOne(
             fetch = FetchType.LAZY
           //  cascade = CascadeType.ALL
     )
-    @JoinColumn(name = "id_author")
+    @JoinColumn(name = "id_autor")
     private Author author;
 
 }
