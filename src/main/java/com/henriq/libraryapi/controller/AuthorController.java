@@ -5,6 +5,7 @@ import com.henriq.libraryapi.dto.AuthorDTO;
 import com.henriq.libraryapi.model.Author;
 import com.henriq.libraryapi.service.AuthorService;
 import jakarta.servlet.Servlet;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/autores")
@@ -64,5 +67,24 @@ public class AuthorController {
         if(authorOpt.isEmpty()) return ResponseEntity.notFound().build();
         service.delete(authorOpt.get());
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<AuthorDTO>> search(
+            @RequestParam(value = "nationality", required = false)
+            String nationality,
+            @RequestParam(value = "name", required = false)
+            String name){
+        List<Author> authors = service.search(name, nationality);
+        List<AuthorDTO> authorsDTO = authors
+                .stream()
+                .map(author -> new AuthorDTO(
+                        author.getId(),
+                        author.getName(),
+                        author.getDateOfBirth(),
+                        author.getNationality()))
+                .toList();
+
+        return ResponseEntity.ok(authorsDTO);
     }
 }
