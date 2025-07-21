@@ -7,13 +7,13 @@ import com.henriq.libraryapi.service.AuthorService;
 import jakarta.servlet.Servlet;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/autores")
@@ -36,5 +36,23 @@ public class AuthorController {
                 .toUri();
 
         return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<AuthorDTO> getDetails(@PathVariable("id") String id){
+        var idAuthor = UUID.fromString(id);
+        Optional<Author> authorOpt = service.getById(idAuthor);
+
+        if(authorOpt.isPresent()){
+            Author author = authorOpt.get();
+            AuthorDTO dto = new AuthorDTO(
+                    author.getId(),
+                    author.getName(),
+                    author.getDateOfBirth(),
+                    author.getNationality());
+
+            return ResponseEntity.ok(dto);
+        }
+        return ResponseEntity.notFound().build();
     }
 }
