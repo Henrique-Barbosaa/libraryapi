@@ -4,11 +4,8 @@ package com.henriq.libraryapi.controller;
 import com.henriq.libraryapi.dto.AuthorDTO;
 import com.henriq.libraryapi.model.Author;
 import com.henriq.libraryapi.service.AuthorService;
-import jakarta.servlet.Servlet;
 import jakarta.websocket.server.PathParam;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -16,7 +13,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/autores")
@@ -86,5 +82,22 @@ public class AuthorController {
                 .toList();
 
         return ResponseEntity.ok(authorsDTO);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Void> update(
+            @PathVariable("id") String id,
+            @RequestBody AuthorDTO dto){
+
+        Optional<Author> authorOpt = service.getById(UUID.fromString(id));
+        if(authorOpt.isEmpty()) return ResponseEntity.notFound().build();
+
+        var author = authorOpt.get();
+        author.setNationality(dto.nationality());
+        author.setName(dto.name());
+        author.setDateOfBirth(dto.birthDate());
+        service.save(author);
+
+        return ResponseEntity.noContent().build();
     }
 }
