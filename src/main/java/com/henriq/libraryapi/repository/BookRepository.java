@@ -78,4 +78,6 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
             set author = ?1
             """)
     void updateAuthor(Author author);
+
+    boolean existsByAuthor(Author author);
 }

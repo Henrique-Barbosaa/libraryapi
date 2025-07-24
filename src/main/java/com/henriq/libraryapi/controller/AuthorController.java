@@ -2,6 +2,9 @@ package com.henriq.libraryapi.controller;
 
 
 import com.henriq.libraryapi.dto.AuthorDTO;
+import com.henriq.libraryapi.dto.ResponseError;
+import com.henriq.libraryapi.exceptions.DuplicateRegistrationException;
+import com.henriq.libraryapi.exceptions.OperationNotAllowedException;
 import com.henriq.libraryapi.model.Author;
 import com.henriq.libraryapi.service.AuthorService;
 import jakarta.websocket.server.PathParam;
@@ -24,17 +27,22 @@ public class AuthorController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody AuthorDTO author){
-        Author authorEntity = author.createAuthor();
-        service.save(authorEntity);
+    public ResponseEntity<Object> save(@RequestBody AuthorDTO author){
+        try {
+            Author authorEntity = author.createAuthor();
+            service.save(authorEntity);
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(authorEntity.getId())
-                .toUri();
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(authorEntity.getId())
+                    .toUri();
 
-        return ResponseEntity.created(location).build();
+            return ResponseEntity.created(location).build();
+        } catch (DuplicateRegistrationException e){
+            var errorDTO = ResponseError.conflictResponse(e.getMessage());
+            return ResponseEntity.status(errorDTO.status()).body(errorDTO);
+        }
     }
 
     @GetMapping("{id}")
@@ -56,13 +64,18 @@ public class AuthorController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") String id){
-        var idAuthor = UUID.fromString(id);
-        Optional<Author> authorOpt = service.getById(idAuthor);
+    public ResponseEntity<Object> delete(@PathVariable("id") String id){
+        try{
+            var idAuthor = UUID.fromString(id);
+            Optional<Author> authorOpt = service.getById(idAuthor);
 
-        if(authorOpt.isEmpty()) return ResponseEntity.notFound().build();
-        service.delete(authorOpt.get());
-        return ResponseEntity.noContent().build();
+            if(authorOpt.isEmpty()) return ResponseEntity.notFound().build();
+            service.delete(authorOpt.get());
+            return ResponseEntity.noContent().build();
+        } catch (OperationNotAllowedException e){
+            var errorDTO = ResponseError.defaultResponse(e.getMessage());
+            return ResponseEntity.status(errorDTO.status()).body(errorDTO);
+        }
     }
 
     @GetMapping
@@ -85,19 +98,24 @@ public class AuthorController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Void> update(
+    public ResponseEntity<Object> update(
             @PathVariable("id") String id,
             @RequestBody AuthorDTO dto){
 
-        Optional<Author> authorOpt = service.getById(UUID.fromString(id));
-        if(authorOpt.isEmpty()) return ResponseEntity.notFound().build();
+        try{
+            Optional<Author> authorOpt = service.getById(UUID.fromString(id));
+            if(authorOpt.isEmpty()) return ResponseEntity.notFound().build();
 
-        var author = authorOpt.get();
-        author.setNationality(dto.nationality());
-        author.setName(dto.name());
-        author.setDateOfBirth(dto.birthDate());
-        service.save(author);
+            var author = authorOpt.get();
+            author.setNationality(dto.nationality());
+            author.setName(dto.name());
+            author.setDateOfBirth(dto.birthDate());
+            service.save(author);
 
-        return ResponseEntity.noContent().build();
+            return ResponseEntity.noContent().build();
+        } catch (DuplicateRegistrationException e){
+            var errorDTO = ResponseError.conflictResponse(e.getMessage());
+            return ResponseEntity.status(errorDTO.status()).body(errorDTO);
+        }
     }
 }
