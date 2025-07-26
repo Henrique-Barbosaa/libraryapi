@@ -7,6 +7,7 @@ import com.henriq.libraryapi.exceptions.DuplicateRegistrationException;
 import com.henriq.libraryapi.exceptions.OperationNotAllowedException;
 import com.henriq.libraryapi.model.Author;
 import com.henriq.libraryapi.service.AuthorService;
+import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class AuthorController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody AuthorDTO author){
+    public ResponseEntity<Object> save(@RequestBody @Valid AuthorDTO author){
         try {
             Author authorEntity = author.createAuthor();
             service.save(authorEntity);
@@ -100,7 +101,7 @@ public class AuthorController {
     @PutMapping("{id}")
     public ResponseEntity<Object> update(
             @PathVariable("id") String id,
-            @RequestBody AuthorDTO dto){
+            @RequestBody @Valid AuthorDTO dto){
 
         try{
             Optional<Author> authorOpt = service.getById(UUID.fromString(id));
