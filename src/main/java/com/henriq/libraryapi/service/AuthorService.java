@@ -6,6 +6,8 @@ import com.henriq.libraryapi.model.Author;
 import com.henriq.libraryapi.repository.AuthorRepository;
 import com.henriq.libraryapi.repository.BookRepository;
 import com.henriq.libraryapi.validator.AuthorValidator;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,6 +48,21 @@ public class AuthorService {
         if(nationality != null) return this.repository.findByNationality(nationality);
 
         return repository.findAll();
+    }
+
+    public List<Author> searchByExample(String name, String nationality){
+        Author author = new Author();
+        author.setNationality(nationality);
+        author.setName(name);
+
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withIgnoreNullValues()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        Example<Author> authorExample = Example.of(author, matcher);
+
+        return repository.findAll(authorExample);
     }
 
     public boolean hasABook(Author author){
