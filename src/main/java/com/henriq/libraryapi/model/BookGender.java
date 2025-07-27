@@ -2,8 +2,9 @@ package com.henriq.libraryapi.model;
 
 public enum BookGender {
     FICCAO,
-    FANTASY,
+    FANTASIA,
+    MISTERIO,
     ROMANCE,
-    ACTION,
-    BIOGRAPHY
+    BIOGRAFIA,
+    CIENCIA
 }
