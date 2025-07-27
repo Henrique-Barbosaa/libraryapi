@@ -36,10 +36,7 @@ public class TransactionService {
      */
     @Transactional
     public void updateTransactionTest(){
-        var author = authorRepository
-                .findById(UUID.fromString("73a65fd3-31c3-4728-92af-19d9fbc29dec"))
-                .orElse(null);
-        author.setDateOfBirth(LocalDate.of(2010, 4, 8));
+
     }
 
     /**
@@ -58,7 +55,7 @@ public class TransactionService {
         Book book = new Book();
         book.setTitle("Entendendo Algorítmos");
         book.setIsbn("21293");
-        book.setGender(BookGender.BIOGRAPHY);
+        book.setGender(BookGender.BIOGRAFIA);
         book.setPrice(BigDecimal.valueOf(430));
         book.setPublicationDate(LocalDate.of(1989,4,15));
 
