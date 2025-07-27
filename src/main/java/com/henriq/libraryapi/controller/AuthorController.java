@@ -5,10 +5,10 @@ import com.henriq.libraryapi.dto.AuthorDTO;
 import com.henriq.libraryapi.dto.ResponseError;
 import com.henriq.libraryapi.exceptions.DuplicateRegistrationException;
 import com.henriq.libraryapi.exceptions.OperationNotAllowedException;
+import com.henriq.libraryapi.mappers.AuthorMapper;
 import com.henriq.libraryapi.model.Author;
 import com.henriq.libraryapi.service.AuthorService;
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -22,21 +22,23 @@ import java.util.UUID;
 @RequestMapping("/autores")
 public class AuthorController {
     private final AuthorService service;
+    private final AuthorMapper mapper;
 
-    public AuthorController(AuthorService service){
+    public AuthorController(AuthorService service, AuthorMapper mapper){
         this.service = service;
+        this.mapper = mapper;
     }
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody @Valid AuthorDTO author){
+    public ResponseEntity<Object> save(@RequestBody @Valid AuthorDTO dto){
         try {
-            Author authorEntity = author.createAuthor();
-            service.save(authorEntity);
+            Author author = mapper.toEntity(dto);
+            service.save(author);
 
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
                     .path("/{id}")
-                    .buildAndExpand(authorEntity.getId())
+                    .buildAndExpand(author.getId())
                     .toUri();
 
             return ResponseEntity.created(location).build();
@@ -51,17 +53,12 @@ public class AuthorController {
         var idAuthor = UUID.fromString(id);
         Optional<Author> authorOpt = service.getById(idAuthor);
 
-        if(authorOpt.isPresent()){
-            Author author = authorOpt.get();
-            AuthorDTO dto = new AuthorDTO(
-                    author.getId(),
-                    author.getName(),
-                    author.getDateOfBirth(),
-                    author.getNationality());
-
-            return ResponseEntity.ok(dto);
-        }
-        return ResponseEntity.notFound().build();
+        return service
+                .getById(idAuthor)
+                .map(author -> {
+                    AuthorDTO dto = mapper.toDTO(author);
+                    return ResponseEntity.ok(dto);
+                }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("{id}")
@@ -88,11 +85,7 @@ public class AuthorController {
         List<Author> authors = service.searchByExample(name, nationality);
         List<AuthorDTO> authorsDTO = authors
                 .stream()
-                .map(author -> new AuthorDTO(
-                        author.getId(),
-                        author.getName(),
-                        author.getDateOfBirth(),
-                        author.getNationality()))
+                .map(mapper::toDTO)
                 .toList();
 
         return ResponseEntity.ok(authorsDTO);

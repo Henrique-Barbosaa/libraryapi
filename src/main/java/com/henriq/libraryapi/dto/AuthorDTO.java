@@ -20,12 +20,4 @@ public record AuthorDTO(
         @NotBlank(message = "Campo obrigatório")
         @Size(max = 50, message = "Campo fora do tamanho padrão")
         String nationality) {
-    public Author createAuthor(){
-        Author author = new Author();
-        author.setDateOfBirth(this.birthDate);
-        author.setName(this.name);
-        author.setNationality(this.nationality);
-
-        return author;
-    }
 }
