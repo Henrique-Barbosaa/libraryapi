@@ -1,5 +1,6 @@
 package com.henriq.libraryapi.service;
 
+import com.henriq.libraryapi.model.Book;
 import com.henriq.libraryapi.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,4 +10,8 @@ import org.springframework.stereotype.Service;
 public class BookService {
 
     private final BookRepository  repository;
+
+    public Book save(Book book){
+        return repository.save(book);
+    }
 }

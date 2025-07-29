@@ -1,6 +1,5 @@
 package com.henriq.libraryapi.dto;
 
-import com.henriq.libraryapi.model.Book;
 import com.henriq.libraryapi.model.BookGender;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
