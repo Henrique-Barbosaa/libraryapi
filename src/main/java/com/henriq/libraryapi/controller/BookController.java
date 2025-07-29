@@ -18,20 +18,15 @@ import java.net.URI;
 @RestController
 @RequestMapping("/livros")
 @RequiredArgsConstructor
-public class BookController implements GenericController{
+public class BookController implements GenericController {
     private final BookService service;
     private final BookMapper mapper;
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody @Valid BookRequestDTO bookDTO){
-        try{
-            Book book = mapper.toEntity(bookDTO);
-            service.save(book);
-            URI location = generateHeaderLocation(book.getId());
-            return ResponseEntity.created(location).build();
-        } catch (DuplicateRegistrationException e){
-            var errorDTO = ResponseError.conflictResponse(e.getMessage());
-            return ResponseEntity.status(errorDTO.status()).body(errorDTO);
-        }
+    public ResponseEntity<Object> save(@RequestBody @Valid BookRequestDTO bookDTO) {
+        Book book = mapper.toEntity(bookDTO);
+        service.save(book);
+        URI location = generateHeaderLocation(book.getId());
+        return ResponseEntity.created(location).build();
     }
 }

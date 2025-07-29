@@ -20,30 +20,26 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/autores")
-public class AuthorController implements GenericController{
+public class AuthorController implements GenericController {
     private final AuthorService service;
     private final AuthorMapper mapper;
 
-    public AuthorController(AuthorService service, AuthorMapper mapper){
+    public AuthorController(AuthorService service, AuthorMapper mapper) {
         this.service = service;
         this.mapper = mapper;
     }
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody @Valid AuthorDTO dto){
-        try {
-            Author author = mapper.toEntity(dto);
-            service.save(author);
-            URI location = generateHeaderLocation(author.getId());
-            return ResponseEntity.created(location).build();
-        } catch (DuplicateRegistrationException e){
-            var errorDTO = ResponseError.conflictResponse(e.getMessage());
-            return ResponseEntity.status(errorDTO.status()).body(errorDTO);
-        }
+    public ResponseEntity<Void> save(@RequestBody @Valid AuthorDTO dto) {
+        Author author = mapper.toEntity(dto);
+        service.save(author);
+        URI location = generateHeaderLocation(author.getId());
+
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<AuthorDTO> getDetails(@PathVariable("id") String id){
+    public ResponseEntity<AuthorDTO> getDetails(@PathVariable("id") String id) {
         var idAuthor = UUID.fromString(id);
         Optional<Author> authorOpt = service.getById(idAuthor);
 
@@ -56,18 +52,14 @@ public class AuthorController implements GenericController{
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Object> delete(@PathVariable("id") String id){
-        try{
-            var idAuthor = UUID.fromString(id);
-            Optional<Author> authorOpt = service.getById(idAuthor);
+    public ResponseEntity<Void> delete(@PathVariable("id") String id) {
+        var idAuthor = UUID.fromString(id);
+        Optional<Author> authorOpt = service.getById(idAuthor);
 
-            if(authorOpt.isEmpty()) return ResponseEntity.notFound().build();
-            service.delete(authorOpt.get());
-            return ResponseEntity.noContent().build();
-        } catch (OperationNotAllowedException e){
-            var errorDTO = ResponseError.defaultResponse(e.getMessage());
-            return ResponseEntity.status(errorDTO.status()).body(errorDTO);
-        }
+        if (authorOpt.isEmpty()) return ResponseEntity.notFound().build();
+        service.delete(authorOpt.get());
+
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
@@ -75,7 +67,7 @@ public class AuthorController implements GenericController{
             @RequestParam(value = "nationality", required = false)
             String nationality,
             @RequestParam(value = "name", required = false)
-            String name){
+            String name) {
         List<Author> authors = service.searchByExample(name, nationality);
         List<AuthorDTO> authorsDTO = authors
                 .stream()
@@ -86,24 +78,18 @@ public class AuthorController implements GenericController{
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Object> update(
+    public ResponseEntity<Void> update(
             @PathVariable("id") String id,
-            @RequestBody @Valid AuthorDTO dto){
+            @RequestBody @Valid AuthorDTO dto) {
+        Optional<Author> authorOpt = service.getById(UUID.fromString(id));
+        if (authorOpt.isEmpty()) return ResponseEntity.notFound().build();
 
-        try{
-            Optional<Author> authorOpt = service.getById(UUID.fromString(id));
-            if(authorOpt.isEmpty()) return ResponseEntity.notFound().build();
+        var author = authorOpt.get();
+        author.setNationality(dto.nationality());
+        author.setName(dto.name());
+        author.setDateOfBirth(dto.dateOfBirth());
+        service.save(author);
 
-            var author = authorOpt.get();
-            author.setNationality(dto.nationality());
-            author.setName(dto.name());
-            author.setDateOfBirth(dto.birthDate());
-            service.save(author);
-
-            return ResponseEntity.noContent().build();
-        } catch (DuplicateRegistrationException e){
-            var errorDTO = ResponseError.conflictResponse(e.getMessage());
-            return ResponseEntity.status(errorDTO.status()).body(errorDTO);
-        }
+        return ResponseEntity.noContent().build();
     }
 }

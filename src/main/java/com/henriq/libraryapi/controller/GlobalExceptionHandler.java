@@ -2,6 +2,8 @@ package com.henriq.libraryapi.controller;
 
 
 import com.henriq.libraryapi.dto.ResponseError;
+import com.henriq.libraryapi.exceptions.DuplicateRegistrationException;
+import com.henriq.libraryapi.exceptions.OperationNotAllowedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,8 +18,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    public ResponseError handleArgsNotValidException(MethodArgumentNotValidException ex){
-        List<FieldError> fieldErrors = ex.getFieldErrors();
+    public ResponseError handleArgsNotValidException(MethodArgumentNotValidException e){
+        List<FieldError> fieldErrors = e.getFieldErrors();
         List<com.henriq.libraryapi.dto.FieldError> errorsList = fieldErrors
                 .stream()
                 .map(f -> new com.henriq.libraryapi.dto.FieldError(f.getField(), f.getDefaultMessage()))
@@ -27,5 +29,26 @@ public class GlobalExceptionHandler {
                 HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 "Erro de validação: campos inválidos",
                 errorsList);
+    }
+
+    @ExceptionHandler(DuplicateRegistrationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseError handleDuplicateRegistrationException(DuplicateRegistrationException e){
+        return ResponseError.conflict(e.getMessage());
+    }
+
+    @ExceptionHandler(OperationNotAllowedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseError handleOperationNotAllowedException(OperationNotAllowedException e){
+        return ResponseError.badRequest(e.getMessage());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseError handleGenericException(RuntimeException e){
+        return new ResponseError(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Ocorreu um erro inesperado. Por favor, entre em contato com o suporte",
+                List.of());
     }
 }

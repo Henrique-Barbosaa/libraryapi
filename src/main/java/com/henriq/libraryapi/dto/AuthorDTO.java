@@ -16,7 +16,7 @@ public record AuthorDTO(
         String name,
         @NotNull(message = "Campo obrigatório")
         @Past(message = "Datas futuras não são permitidas nesse campo")
-        LocalDate birthDate,
+        LocalDate dateOfBirth,
         @NotBlank(message = "Campo obrigatório")
         @Size(max = 50, message = "Campo fora do tamanho padrão")
         String nationality) {
