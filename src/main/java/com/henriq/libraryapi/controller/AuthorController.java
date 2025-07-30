@@ -2,16 +2,12 @@ package com.henriq.libraryapi.controller;
 
 
 import com.henriq.libraryapi.dto.AuthorDTO;
-import com.henriq.libraryapi.dto.ResponseError;
-import com.henriq.libraryapi.exceptions.DuplicateRegistrationException;
-import com.henriq.libraryapi.exceptions.OperationNotAllowedException;
 import com.henriq.libraryapi.mappers.AuthorMapper;
 import com.henriq.libraryapi.model.Author;
 import com.henriq.libraryapi.service.AuthorService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
