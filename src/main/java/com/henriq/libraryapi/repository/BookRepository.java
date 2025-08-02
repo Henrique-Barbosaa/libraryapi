@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface BookRepository extends JpaRepository<Book, UUID>, JpaSpecificationExecutor<Book> {
@@ -36,6 +37,10 @@ public interface BookRepository extends JpaRepository<Book, UUID>, JpaSpecificat
 
     // select * from book where publication_date BETWEEN ? and ?
     List<Book> findByPublicationDateBetween(LocalDate start, LocalDate end);
+
+    Optional<Book> findByIsbn(String isbn);
+
+    boolean existsByIsbn(String isbn);
 
 
     // JPQL QUERY

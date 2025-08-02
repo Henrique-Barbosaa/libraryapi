@@ -4,6 +4,7 @@ import com.henriq.libraryapi.model.Book;
 import com.henriq.libraryapi.model.BookGender;
 import com.henriq.libraryapi.repository.BookRepository;
 import com.henriq.libraryapi.repository.specs.BookSpecs;
+import com.henriq.libraryapi.validator.BookValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,10 @@ import java.util.UUID;
 public class BookService {
 
     private final BookRepository  repository;
+    private final BookValidator validator;
 
     public Book save(Book book){
+        validator.validate(book);
         return repository.save(book);
     }
 
