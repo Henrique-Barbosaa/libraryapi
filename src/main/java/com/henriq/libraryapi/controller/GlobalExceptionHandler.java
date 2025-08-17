@@ -1,8 +1,10 @@
 package com.henriq.libraryapi.controller;
 
 
+import com.henriq.libraryapi.dto.InvalidFieldError;
 import com.henriq.libraryapi.dto.ResponseError;
 import com.henriq.libraryapi.exceptions.DuplicateRegistrationException;
+import com.henriq.libraryapi.exceptions.InvalidFiedException;
 import com.henriq.libraryapi.exceptions.OperationNotAllowedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -20,9 +22,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ResponseError handleArgsNotValidException(MethodArgumentNotValidException e){
         List<FieldError> fieldErrors = e.getFieldErrors();
-        List<com.henriq.libraryapi.dto.FieldError> errorsList = fieldErrors
+        List<InvalidFieldError> errorsList = fieldErrors
                 .stream()
-                .map(f -> new com.henriq.libraryapi.dto.FieldError(f.getField(), f.getDefaultMessage()))
+                .map(f -> new InvalidFieldError(f.getField(), f.getDefaultMessage()))
                 .toList();
 
         return new ResponseError(
@@ -41,6 +43,15 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseError handleOperationNotAllowedException(OperationNotAllowedException e){
         return ResponseError.badRequest(e.getMessage());
+    }
+
+    @ExceptionHandler(InvalidFiedException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ResponseError handleInvalidFieldException(InvalidFiedException e){
+        return new ResponseError(
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                e.getMessage(),
+                List.of(new InvalidFieldError(e.getField(), e.getMessage())));
     }
 
     @ExceptionHandler(RuntimeException.class)
