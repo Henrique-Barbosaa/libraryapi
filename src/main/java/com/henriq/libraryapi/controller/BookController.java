@@ -9,6 +9,7 @@ import com.henriq.libraryapi.model.BookGender;
 import com.henriq.libraryapi.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,7 +55,7 @@ public class BookController implements GenericController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BookResponseDTO>> search(
+    public ResponseEntity<Page<BookResponseDTO>> search(
             @RequestParam(value = "title", required = false)
             String title,
             @RequestParam(value = "isbn", required = false)
@@ -64,15 +65,18 @@ public class BookController implements GenericController {
             @RequestParam(value = "publication-year", required = false)
             Integer publicationYear,
             @RequestParam(value = "author-name", required = false)
-            String authorName
+            String authorName,
+            @RequestParam(value = "page", defaultValue = "0")
+            Integer page,
+            @RequestParam(value = "page-size", defaultValue = "10")
+            Integer pageSize
     ){
-        List<Book> result = service.search(isbn, title, authorName, gender, publicationYear);
-        List<BookResponseDTO> list = result
-                .stream()
-                .map(mapper::toDTO)
-                .toList();
+        Page<Book> result = service.search(
+                isbn, title, authorName, gender, publicationYear, page, pageSize);
 
-        return ResponseEntity.ok(list);
+        Page<BookResponseDTO> pages = result.map(mapper::toDTO);
+
+        return ResponseEntity.ok(pages);
     }
 
     @PutMapping("/{id}")

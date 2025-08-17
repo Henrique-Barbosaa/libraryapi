@@ -6,10 +6,11 @@ import com.henriq.libraryapi.repository.BookRepository;
 import com.henriq.libraryapi.repository.specs.BookSpecs;
 import com.henriq.libraryapi.validator.BookValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,11 +34,13 @@ public class BookService {
         repository.delete(book);
     }
 
-    public List<Book> search(String isbn,
+    public Page<Book> search(String isbn,
                              String title,
                              String authorName,
                              BookGender gender,
-                             Integer publicationYear){
+                             Integer publicationYear,
+                             Integer page,
+                             Integer pageSize){
         Specification<Book> specs = (root, query, cb) -> cb.conjunction();
 
         if (isbn != null) specs = specs.and(BookSpecs.isbnEqual(isbn));
@@ -46,6 +49,6 @@ public class BookService {
         if(publicationYear != null) specs = specs.and(BookSpecs.publicationYearEqual(publicationYear));
         if(authorName != null) specs = specs.and(BookSpecs.authorNameLike(authorName));
 
-        return repository.findAll(specs);
+        return repository.findAll(specs, PageRequest.of(page, pageSize));
     }
 }
