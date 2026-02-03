@@ -6,6 +6,9 @@ import com.henriq.libraryapi.dto.ResponseError;
 import com.henriq.libraryapi.exceptions.DuplicateRegistrationException;
 import com.henriq.libraryapi.exceptions.InvalidFiedException;
 import com.henriq.libraryapi.exceptions.OperationNotAllowedException;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -43,6 +46,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseError handleOperationNotAllowedException(OperationNotAllowedException e){
         return ResponseError.badRequest(e.getMessage());
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseError handleEntityNotFoundException(EntityNotFoundException e){
+        return ResponseError.notFound(e.getMessage());
     }
 
     @ExceptionHandler(InvalidFiedException.class)

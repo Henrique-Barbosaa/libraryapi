@@ -21,7 +21,7 @@ public class User {
     private UUID id;
 
     @Column
-    private String login;
+    private String username;
 
     @Column
     private String password;

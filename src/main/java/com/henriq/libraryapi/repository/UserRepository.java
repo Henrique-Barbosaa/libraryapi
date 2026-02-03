@@ -7,5 +7,5 @@ import com.henriq.libraryapi.model.User;
 
 public interface UserRepository extends JpaRepository<User, UUID>{
 
-    Optional<User> findByLogin(String login);
+    Optional<User> findByUsername(String username);
 }

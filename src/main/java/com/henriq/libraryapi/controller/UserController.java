@@ -11,7 +11,7 @@ import com.henriq.libraryapi.dto.UserDTO;
 import com.henriq.libraryapi.service.UserService;
 
 @RestController
-@RequestMapping("usuarios")
+@RequestMapping("/usuarios")
 public class UserController {
     private final UserService userService;
 

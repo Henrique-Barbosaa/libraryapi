@@ -30,8 +30,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User getByLogin(String login){
-        return userRepository.findByLogin(login)
+    public User getByLogin(String username){
+        return userRepository.findByUsername(username)
             .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
     }
 }
