@@ -34,6 +34,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.DELETE,"/autores/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT,"/autores/**").hasRole("ADMIN")
                         .requestMatchers("/livros/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll()
                         .anyRequest().authenticated();
                 })
                 .build();

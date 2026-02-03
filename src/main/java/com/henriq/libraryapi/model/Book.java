@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "livro")
+@Table(name = "books")
 @Data
 @ToString(exclude = "author")
 @EntityListeners(AuditingEntityListener.class)
@@ -23,38 +23,37 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "titulo", length = 150, nullable = false)
+    @Column(name = "title", length = 150, nullable = false)
     private String title;
 
     @Column(name = "isbn", length = 20, nullable = false)
     private String isbn;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "genero", length = 30, nullable = false)
+    @Column(name = "gender", length = 30, nullable = false)
     private BookGender gender;
 
-    @Column(name = "data_publicacao", nullable = false)
+    @Column(name = "publication_date", nullable = false)
     private LocalDate publicationDate;
 
-    @Column(name = "preco", precision = 18, scale = 2)
+    @Column(name = "price", precision = 18, scale = 2)
     private BigDecimal price;
 
     @ManyToOne(
             fetch = FetchType.LAZY
-          //  cascade = CascadeType.ALL
     )
-    @JoinColumn(name = "id_autor")
+    @JoinColumn(name = "author_id")
     private Author author;
 
     @CreatedDate
-    @Column(name = "data_cadastro")
+    @Column(name = "register_date")
     private LocalDateTime registerDate;
 
     @LastModifiedDate
-    @Column(name = "data_atualizacao")
+    @Column(name = "update_date")
     private LocalDateTime updateDate;
 
-    @Column(name = "id_usuario")
+    @Column(name = "user_id")
     private UUID userId;
 
 }

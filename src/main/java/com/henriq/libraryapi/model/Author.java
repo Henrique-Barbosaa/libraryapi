@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "autor", schema = "public")
+@Table(name = "authors", schema = "public")
 @Data
 @ToString(exclude = "books")
 @EntityListeners(AuditingEntityListener.class)
@@ -23,30 +23,29 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "nome", length = 100, nullable = false)
+    @Column(name = "name", length = 100, nullable = false)
     private String name;
 
-    @Column(name = "data_nascimento", nullable = false)
+    @Column(name = "birth_date", nullable = false)
     private LocalDate dateOfBirth;
 
-    @Column(name = "nacionalidade", length = 50, nullable = false)
+    @Column(name = "nationality", length = 50, nullable = false)
     private String nationality;
 
     @OneToMany(
             mappedBy = "author"
-            // fetch = FetchType.EAGER
     )
     private List<Book> books;
 
     @CreatedDate
-    @Column(name = "data_cadastro")
+    @Column(name = "register_date")
     private LocalDateTime registerDate;
 
     @LastModifiedDate
-    @Column(name = "data_atualizacao")
+    @Column(name = "update_date")
     private LocalDateTime updateDate;
 
-    @Column(name = "id_usuario")
+    @Column(name = "user_id")
     private UUID userId;
 
 }
