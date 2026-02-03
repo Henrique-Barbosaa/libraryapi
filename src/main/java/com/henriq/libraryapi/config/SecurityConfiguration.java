@@ -23,7 +23,8 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(crsf -> crsf.disable())
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .formLogin(config -> {
                     config.loginPage("/login").permitAll();
                 })
