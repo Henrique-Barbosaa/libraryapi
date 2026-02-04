@@ -3,8 +3,10 @@ package com.henriq.libraryapi.service;
 
 import com.henriq.libraryapi.exceptions.OperationNotAllowedException;
 import com.henriq.libraryapi.model.Author;
+import com.henriq.libraryapi.model.User;
 import com.henriq.libraryapi.repository.AuthorRepository;
 import com.henriq.libraryapi.repository.BookRepository;
+import com.henriq.libraryapi.security.SecurityService;
 import com.henriq.libraryapi.validator.AuthorValidator;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -19,15 +21,23 @@ public class AuthorService {
     private final AuthorRepository repository;
     private final BookRepository bookRepository;
     private final AuthorValidator validator;
+    private final SecurityService securityService;
 
-    public AuthorService(AuthorRepository repository, AuthorValidator validator, BookRepository bookRepository){
+    public AuthorService(
+        AuthorRepository repository, 
+        AuthorValidator validator, 
+        BookRepository bookRepository,
+        SecurityService securityService
+    ){
         this.validator = validator;
         this.bookRepository = bookRepository;
         this.repository = repository;
+        this.securityService = securityService;
     }
 
     public Author save(Author author){
         validator.validate(author);
+        author.setUser(securityService.getLoggedUser());
         return this.repository.save(author);
     }
 

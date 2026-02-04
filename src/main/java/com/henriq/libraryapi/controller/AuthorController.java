@@ -4,10 +4,16 @@ package com.henriq.libraryapi.controller;
 import com.henriq.libraryapi.dto.AuthorDTO;
 import com.henriq.libraryapi.mappers.AuthorMapper;
 import com.henriq.libraryapi.model.Author;
+import com.henriq.libraryapi.model.User;
+import com.henriq.libraryapi.security.SecurityService;
 import com.henriq.libraryapi.service.AuthorService;
+import com.henriq.libraryapi.service.UserService;
+
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -21,18 +27,23 @@ public class AuthorController implements GenericController {
     private final AuthorService service;
     private final AuthorMapper mapper;
 
-    public AuthorController(AuthorService service, AuthorMapper mapper) {
+    public AuthorController(
+        AuthorService service, 
+        AuthorMapper mapper
+    ) {
         this.service = service;
         this.mapper = mapper;
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> save(@RequestBody @Valid AuthorDTO dto) {
+    public ResponseEntity<Void> save(
+        @RequestBody @Valid AuthorDTO dto
+    ) {
         Author author = mapper.toEntity(dto);
         service.save(author);
-        URI location = generateHeaderLocation(author.getId());
 
+        URI location = generateHeaderLocation(author.getId());
         return ResponseEntity.created(location).build();
     }
 

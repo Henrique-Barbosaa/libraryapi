@@ -4,7 +4,6 @@ package com.henriq.libraryapi.repository;
 import com.henriq.libraryapi.model.Book;
 import com.henriq.libraryapi.model.Author;
 import com.henriq.libraryapi.model.BookGender;
-import com.henriq.libraryapi.service.TransactionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,9 +14,7 @@ import java.util.UUID;
 
 
 @SpringBootTest
-public class TransactionServiceTest {
-    @Autowired
-    TransactionService service;
+public class APITest {
 
     @Autowired
     AuthorRepository authorRepository;
@@ -40,10 +37,5 @@ public class TransactionServiceTest {
 
         book.setAuthor(author);
         repository.save(book);
-    }
-
-    @Test
-    public void testAPI(){
-        service.updateTransactionTest();
     }
 }

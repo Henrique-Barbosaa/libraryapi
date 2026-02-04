@@ -4,8 +4,8 @@ import com.henriq.libraryapi.model.Book;
 import com.henriq.libraryapi.model.BookGender;
 import com.henriq.libraryapi.repository.BookRepository;
 import com.henriq.libraryapi.repository.specs.BookSpecs;
+import com.henriq.libraryapi.security.SecurityService;
 import com.henriq.libraryapi.validator.BookValidator;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -15,14 +15,25 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class BookService {
 
     private final BookRepository  repository;
     private final BookValidator validator;
+    private final SecurityService securityService;
+
+    public BookService(
+        BookRepository bookRepository,
+        BookValidator bookValidator,
+        SecurityService securityService
+    ){
+        this.repository = bookRepository;
+        this.validator = bookValidator;
+        this.securityService = securityService;
+    }
 
     public Book save(Book book){
         validator.validate(book);
+        book.setUser(securityService.getLoggedUser());
         return repository.save(book);
     }
 
