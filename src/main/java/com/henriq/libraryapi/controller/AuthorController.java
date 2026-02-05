@@ -1,25 +1,29 @@
 package com.henriq.libraryapi.controller;
 
 
-import com.henriq.libraryapi.dto.AuthorDTO;
-import com.henriq.libraryapi.mappers.AuthorMapper;
-import com.henriq.libraryapi.model.Author;
-import com.henriq.libraryapi.model.User;
-import com.henriq.libraryapi.security.SecurityService;
-import com.henriq.libraryapi.service.AuthorService;
-import com.henriq.libraryapi.service.UserService;
-
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.henriq.libraryapi.dto.AuthorDTO;
+import com.henriq.libraryapi.mappers.AuthorMapper;
+import com.henriq.libraryapi.model.Author;
+import com.henriq.libraryapi.service.AuthorService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/autores")

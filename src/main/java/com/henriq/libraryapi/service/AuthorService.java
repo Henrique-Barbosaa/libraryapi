@@ -1,20 +1,20 @@
 package com.henriq.libraryapi.service;
 
 
-import com.henriq.libraryapi.exceptions.OperationNotAllowedException;
-import com.henriq.libraryapi.model.Author;
-import com.henriq.libraryapi.model.User;
-import com.henriq.libraryapi.repository.AuthorRepository;
-import com.henriq.libraryapi.repository.BookRepository;
-import com.henriq.libraryapi.security.SecurityService;
-import com.henriq.libraryapi.validator.AuthorValidator;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import com.henriq.libraryapi.exceptions.OperationNotAllowedException;
+import com.henriq.libraryapi.model.Author;
+import com.henriq.libraryapi.repository.AuthorRepository;
+import com.henriq.libraryapi.repository.BookRepository;
+import com.henriq.libraryapi.security.SecurityService;
+import com.henriq.libraryapi.validator.AuthorValidator;
 
 @Service
 public class AuthorService {

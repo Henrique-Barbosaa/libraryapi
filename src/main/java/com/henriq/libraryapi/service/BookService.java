@@ -1,18 +1,19 @@
 package com.henriq.libraryapi.service;
 
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
 import com.henriq.libraryapi.model.Book;
 import com.henriq.libraryapi.model.BookGender;
 import com.henriq.libraryapi.repository.BookRepository;
 import com.henriq.libraryapi.repository.specs.BookSpecs;
 import com.henriq.libraryapi.security.SecurityService;
 import com.henriq.libraryapi.validator.BookValidator;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class BookService {
