@@ -27,17 +27,18 @@ public class SecurityConfiguration {
         return http
                 .csrf(crsf -> crsf.disable())
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
-                // .formLogin(config -> {
-                //     config.loginPage("/login").permitAll();
-                // })
-                .formLogin(Customizer.withDefaults())
+                .formLogin(config -> {
+                    config.loginPage("/login").permitAll();
+                })
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll()
                         .anyRequest().authenticated();
                 })
                 .oauth2Login(oauth2 -> {
-                    oauth2.successHandler(successHandler);
+                    oauth2
+                        .loginPage("/login")
+                        .successHandler(successHandler);
                 })
                 .build();
     }
