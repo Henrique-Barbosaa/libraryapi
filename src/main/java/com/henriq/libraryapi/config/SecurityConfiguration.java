@@ -35,7 +35,7 @@ public class SecurityConfiguration {
                 })
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll()
+                    auth.requestMatchers(HttpMethod.POST, "/users/**").permitAll()
                         .anyRequest().authenticated();
                 })
                 .oauth2Login(oauth2 -> {

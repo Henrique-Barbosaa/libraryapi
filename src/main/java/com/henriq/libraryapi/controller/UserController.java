@@ -13,7 +13,7 @@ import com.henriq.libraryapi.service.UserService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/users")
 public class UserController {
     private final UserService userService;
 

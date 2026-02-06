@@ -26,7 +26,7 @@ import com.henriq.libraryapi.service.AuthorService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/autores")
+@RequestMapping("/authors")
 public class AuthorController implements GenericController {
     private final AuthorService service;
     private final AuthorMapper mapper;
