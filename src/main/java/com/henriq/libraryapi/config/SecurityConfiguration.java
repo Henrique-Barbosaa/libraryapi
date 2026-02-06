@@ -13,13 +13,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.henriq.libraryapi.security.LoginSocialSuccessHandler;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfiguration {
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+        HttpSecurity http, 
+        LoginSocialSuccessHandler successHandler
+    ) throws Exception {
         return http
                 .csrf(crsf -> crsf.disable())
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
@@ -32,7 +36,9 @@ public class SecurityConfiguration {
                     auth.requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll()
                         .anyRequest().authenticated();
                 })
-                .oauth2Login(Customizer.withDefaults())
+                .oauth2Login(oauth2 -> {
+                    oauth2.successHandler(successHandler);
+                })
                 .build();
     }
 

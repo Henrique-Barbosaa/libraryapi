@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
             HttpStatus.BAD_REQUEST.value(),
             HttpStatus.BAD_REQUEST.getReasonPhrase(),
-            "Error na validção dos campos. Verifique-os.",
+            "Error na validação dos campos.",
             errors);
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);

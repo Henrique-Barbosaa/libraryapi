@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.henriq.libraryapi.dto.UserDTO;
 import com.henriq.libraryapi.service.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/usuarios")
 public class UserController {
@@ -20,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody UserDTO userDTO){
+    public ResponseEntity<Void> save(@RequestBody @Valid UserDTO userDTO){
         userService.save(userDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
