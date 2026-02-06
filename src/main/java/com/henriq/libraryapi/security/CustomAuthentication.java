@@ -21,7 +21,7 @@ public class CustomAuthentication implements Authentication{
 
     @Override
     public String getName() {
-        return this.user.getUsername();
+        return this.user.getEmail();
     }
 
     @Override
@@ -38,7 +38,7 @@ public class CustomAuthentication implements Authentication{
 
     @Override
     public Object getDetails() {
-        return this.user.getUsername();
+        return this.user.getEmail();
     }
 
     @Override

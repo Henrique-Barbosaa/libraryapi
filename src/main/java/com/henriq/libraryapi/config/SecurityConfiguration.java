@@ -28,7 +28,10 @@ public class SecurityConfiguration {
                 .csrf(crsf -> crsf.disable())
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .formLogin(config -> {
-                    config.loginPage("/login").permitAll();
+                    config.loginPage("/login")
+                          .usernameParameter("email")
+                          .permitAll();
+
                 })
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> {

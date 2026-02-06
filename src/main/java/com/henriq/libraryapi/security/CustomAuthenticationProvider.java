@@ -24,7 +24,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider{
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        User user = userService.getByLogin(authentication.getName());
+        User user = userService.getByEmail(authentication.getName());
         if (user == null) throw new UsernameNotFoundException("Usuário ou senha incorretos.");
         
         String cryptPassword = user.getPassword();

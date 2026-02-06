@@ -8,8 +8,6 @@ import com.henriq.libraryapi.mappers.UserMapper;
 import com.henriq.libraryapi.model.User;
 import com.henriq.libraryapi.repository.UserRepository;
 
-import jakarta.persistence.EntityNotFoundException;
-
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -30,13 +28,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User getByLogin(String username){
-        return userRepository.findByUsername(username)
-            .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
-    }
-
     public User getByEmail(String email){
         return userRepository.findByEmail(email)
-            .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+            .orElse(null);
     }
 }

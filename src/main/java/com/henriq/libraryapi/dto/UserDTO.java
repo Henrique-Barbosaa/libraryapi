@@ -10,9 +10,6 @@ import jakarta.validation.constraints.NotNull;
 public record UserDTO(
 
     @NotBlank(message = "Campo obrigatório")
-    String username, 
-
-    @NotBlank(message = "Campo obrigatório")
     String password, 
     
     @NotBlank(message = "Campo obrigatório")

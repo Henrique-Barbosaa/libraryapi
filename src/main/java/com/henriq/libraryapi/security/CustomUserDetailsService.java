@@ -16,10 +16,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username){
-        User user = userService.getByLogin(username);
+        User user = userService.getByEmail(username);
 
         return org.springframework.security.core.userdetails.User.builder()
-                    .username(user.getUsername())
+                    .username(user.getEmail())
                     .password(user.getPassword())
                     .roles(user.getRoles().stream()
                         .map(role -> role.toString())

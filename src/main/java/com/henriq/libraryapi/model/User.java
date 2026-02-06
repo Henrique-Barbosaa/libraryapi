@@ -21,13 +21,10 @@ public class User {
     private UUID id;
 
     @Column
-    private String username;
-
+    private String email;
+    
     @Column
     private String password;
-
-    @Column
-    private String email;
 
     @Column(name = "roles")
     private List<Roles> roles;
