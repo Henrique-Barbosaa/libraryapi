@@ -8,6 +8,8 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,8 +27,8 @@ public class SecurityConfiguration {
         LoginSocialSuccessHandler successHandler
     ) throws Exception {
         return http
-                .csrf(crsf -> crsf.disable())
-                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
+                .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .formLogin(config -> {
                     config.loginPage("/login")
                           .usernameParameter("email")
@@ -43,12 +45,8 @@ public class SecurityConfiguration {
                         .loginPage("/login")
                         .successHandler(successHandler);
                 })
+                .oauth2ResourceServer(rs -> rs.jwt(Customizer.withDefaults()))
                 .build();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder(10);
     }
 
     @Bean
