@@ -1,6 +1,7 @@
 package com.henriq.libraryapi.config;
 
 
+import com.henriq.libraryapi.security.CustomJwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,10 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.henriq.libraryapi.security.LoginSocialSuccessHandler;
@@ -26,7 +26,8 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(
         HttpSecurity http, 
-        LoginSocialSuccessHandler successHandler
+        LoginSocialSuccessHandler successHandler,
+        CustomJwtAuthenticationFilter jwtAuthenticationFilter
     ) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -48,6 +49,7 @@ public class SecurityConfiguration {
                         .successHandler(successHandler);
                 })
                 .oauth2ResourceServer(rs -> rs.jwt(Customizer.withDefaults()))
+                .addFilterAfter(jwtAuthenticationFilter, BearerTokenAuthenticationFilter.class)
                 .build();
     }
 
