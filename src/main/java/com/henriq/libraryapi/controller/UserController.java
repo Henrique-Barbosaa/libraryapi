@@ -1,18 +1,18 @@
 package com.henriq.libraryapi.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.henriq.libraryapi.dto.UserDTO;
 import com.henriq.libraryapi.service.UserService;
 
 import jakarta.validation.Valid;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-@RestController
+@Controller
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
@@ -22,8 +22,16 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody @Valid UserDTO userDTO){
+    public String save(
+            @Valid @ModelAttribute("userDTO") UserDTO userDTO,
+            BindingResult result,
+            RedirectAttributes redirectAttributes
+    ){
+        if(result.hasErrors()) return "register";
+
         userService.save(userDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Conta criada com sucesso! Faça login.");
+        return "redirect:/login";
     }
 }

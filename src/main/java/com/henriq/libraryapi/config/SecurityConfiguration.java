@@ -40,8 +40,10 @@ public class SecurityConfiguration {
                 })
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(HttpMethod.POST, "/users/**").permitAll()
-                        .anyRequest().authenticated();
+                    auth.requestMatchers("/login/**").permitAll()
+                            .requestMatchers("/register/**").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/users/**").permitAll()
+                            .anyRequest().authenticated();
                 })
                 .oauth2Login(oauth2 -> {
                     oauth2
