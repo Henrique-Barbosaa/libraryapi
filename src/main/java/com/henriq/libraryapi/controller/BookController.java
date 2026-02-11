@@ -20,12 +20,12 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/books")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 public class BookController implements GenericController {
     private final BookService service;
     private final BookMapper mapper;
 
     @PostMapping
+    @PreAuthorize("hasRole('LIBRARIAN')")
     public ResponseEntity<Object> save(@RequestBody @Valid BookRequestDTO bookDTO) {
         Book book = mapper.toEntity(bookDTO);
         service.save(book);
@@ -34,6 +34,7 @@ public class BookController implements GenericController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<BookResponseDTO> getDetails(@PathVariable("id") String id){
         return service
                 .findById(UUID.fromString(id))
@@ -45,6 +46,7 @@ public class BookController implements GenericController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('LIBRARIAN')")
     public ResponseEntity<Object> delete(@PathVariable("id") String id){
         return service
                 .findById(UUID.fromString(id))
@@ -56,6 +58,7 @@ public class BookController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Page<BookResponseDTO>> search(
             @RequestParam(value = "title", required = false)
             String title,
@@ -81,6 +84,7 @@ public class BookController implements GenericController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('LIBRARIAN')")
     public ResponseEntity<Object> update(
             @PathVariable("id") String id,
             @RequestBody @Valid BookRequestDTO dto){

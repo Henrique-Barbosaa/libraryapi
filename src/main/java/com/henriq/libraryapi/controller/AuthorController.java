@@ -40,7 +40,7 @@ public class AuthorController implements GenericController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('LIBRARIAN')")
     public ResponseEntity<Void> save(
         @RequestBody @Valid AuthorDTO dto
     ) {
@@ -52,7 +52,7 @@ public class AuthorController implements GenericController {
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<AuthorDTO> getDetails(@PathVariable("id") String id) {
         var idAuthor = UUID.fromString(id);
 
@@ -65,7 +65,7 @@ public class AuthorController implements GenericController {
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('LIBRARIAN')")
     public ResponseEntity<Void> delete(@PathVariable("id") String id) {
         var idAuthor = UUID.fromString(id);
         Optional<Author> authorOpt = service.getById(idAuthor);
@@ -77,7 +77,7 @@ public class AuthorController implements GenericController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<AuthorDTO>> search(
             @RequestParam(value = "nationality", required = false)
             String nationality,
@@ -93,7 +93,7 @@ public class AuthorController implements GenericController {
     }
 
     @PutMapping("{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('LIBRARIAN')")
     public ResponseEntity<Void> update(
             @PathVariable("id") String id,
             @RequestBody @Valid AuthorDTO dto) {

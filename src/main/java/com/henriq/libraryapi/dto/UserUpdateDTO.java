@@ -1,18 +1,22 @@
 package com.henriq.libraryapi.dto;
 
-import java.util.List;
 import com.henriq.libraryapi.model.Roles;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record UserDTO(
+import java.util.List;
 
-    @NotBlank(message = "Campo obrigatório")
+public record UserUpdateDTO(
+
+    @NotBlank(message = "Senha é obrigatória")
     String password, 
     
-    @NotBlank(message = "Campo obrigatório")
+    @NotBlank(message = "Email é obrigatório")
     @Email(message = "Email inválido")
-    String email
+    String email,
+
+
+    @NotNull(message = "Campo obrigatório")
+    List<Roles> roles
 ) {}

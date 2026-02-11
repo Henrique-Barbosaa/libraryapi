@@ -21,7 +21,7 @@ public class AuthController {
 
     @GetMapping("/register")
     public String registerPage(Model model){
-        model.addAttribute("userDTO", new UserDTO("", "", List.of(Roles.USER)));
+        model.addAttribute("userDTO", new UserDTO("", ""));
         return "register";
     }
 

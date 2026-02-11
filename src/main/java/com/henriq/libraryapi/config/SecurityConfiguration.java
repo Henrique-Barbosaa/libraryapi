@@ -5,6 +5,8 @@ import com.henriq.libraryapi.security.CustomJwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -70,5 +72,13 @@ public class SecurityConfiguration {
         converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
 
         return converter;
+    }
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        return RoleHierarchyImpl.withDefaultRolePrefix()
+                .role("ADMIN").implies("LIBRARIAN")
+                .role("LIBRARIAN").implies("USER")
+                .build();
     }
 }
